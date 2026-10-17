@@ -42,4 +42,17 @@ test.describe("idioma", () => {
     const r = await page.goto("/xx");
     expect(r?.status()).toBe(404);
   });
+
+  test("publica as duas versões para os buscadores", async ({ page }) => {
+    await page.goto("/pt");
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute("href", /\/en$/);
+    await expect(page).toHaveTitle(/Pedro Melo/);
+  });
+
+  test("404 explica nos dois idiomas", async ({ page }) => {
+    const r = await page.goto("/pt/nao-existe");
+    expect(r?.status()).toBe(404);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("não existe");
+    await expect(page.getByText("This page doesn't exist.")).toBeVisible();
+  });
 });

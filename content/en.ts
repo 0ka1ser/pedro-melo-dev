@@ -1,0 +1,246 @@
+import type { SiteContent } from "./types";
+
+export const en = {
+  meta: {
+    title: "Pedro Melo · Software Engineer",
+    description:
+      "I'm a software engineer at GREat (UFC, Brazil), where I act as Tech Lead on an R&D project with Dell. I design the architecture, set the team's priorities and turn prototypes into systems the company can maintain. Outside of that, I ship products through KaiserInc.",
+  },
+  nav: {
+    links: [
+      { id: "destaque", label: "Featured" },
+      { id: "como-trabalho", label: "How I work" },
+      { id: "experiencia", label: "Experience" },
+      { id: "stack", label: "Stack" },
+      { id: "projetos", label: "Projects" },
+      { id: "kaiserinc", label: "KaiserInc" },
+      { id: "servicos", label: "Services" },
+    ],
+    contactCta: "Contact",
+    langSwitch: { label: "Ler em português", target: "pt", targetName: "Português" },
+    menuLabel: "Menu",
+  },
+  hero: {
+    name: "Pedro Melo",
+    alias: "Kaiser",
+    headline: "Software Engineer · Tech Lead on an R&D project with Dell at GREat/UFC",
+    bio: "I'm a software engineer at GREat (UFC, Brazil), where I act as Tech Lead on an R&D project with Dell. I design the architecture, set the team's priorities and turn prototypes into systems the company can maintain. Outside of that, I ship products through KaiserInc.",
+    avatarAlt: "Photo of Pedro Melo",
+    ctaProjects: "View projects",
+    ctaCv: "Download CV",
+    // ponytail: o CV em inglês ainda não existe; aponta para o PDF em português até lá.
+    cvHref: "/cv-pedro-melo-pt.pdf",
+  },
+  featured: {
+    id: "destaque",
+    title: "Featured work",
+    labels: { problem: "Problem", role: "Role", decisions: "Decisions", result: "Result" },
+    cases: [
+      {
+        title: "R&D project with Dell",
+        org: "GREat/UFC",
+        period: "Feb 2026 to present",
+        problem:
+          "A hackathon prototype had to become a system at Dell's engineering standard, without full access to the real environments.",
+        role: "Acting as Tech Lead: technical decisions, priorities for the 3-dev team, and consulted on UI/UX, requirements and testing.",
+        decisions: [
+          "Architecture proposed by me, adopted as the project standard.",
+          "SSO integration.",
+          "Gateways for flexible configuration.",
+          "ServiceNow and Okta PDIs and the Bot Framework playground in place of the real environments.",
+        ],
+        result: "System aligned with the company's standards, with features reviewed with the POs.",
+        tags: ["SSO", "ServiceNow", "Okta", "Bot Framework"],
+        link: { label: "Project on the GREat website", href: "https://www.great.ufc.br/projetos/" },
+      },
+      {
+        title: "AluMonitor",
+        org: "UFC",
+        period: "2025 to present",
+        problem: "UFC's management needed to anticipate student dropout.",
+        role: "Lead developer (212 of 232 commits).",
+        decisions: [
+          "Platform that combines academic and socioeconomic data.",
+          "In-house forms service for data collection.",
+          "Experimental migration to microservices.",
+        ],
+        result: "In production, running the first official socioeconomic data collection.",
+        tags: ["Academic data", "Socioeconomic data"],
+      },
+    ],
+  },
+  howIWork: {
+    id: "como-trabalho",
+    title: "How I work",
+    lead: "I work with AI agents every day. I built my own development workflow, from planning to delivery, where several agents split the work and the decisions stay with me. Through KaiserInc, I turn side projects into products.",
+    steps: [
+      { title: "Grilling", body: "The agent gathers the facts from the code and brings me only the decisions, each with a recommendation." },
+      { title: "Spec", body: "Problem, acceptance criteria and what stays out." },
+      { title: "Plan", body: "Small tasks, with the test before the code." },
+      { title: "Execution and validation", body: "Several agents split the work; I review and test in the real app." },
+    ],
+  },
+  experience: {
+    id: "experiencia",
+    title: "Experience and education",
+    items: [
+      {
+        period: "Feb 2026 to present",
+        role: "R&D with Dell · acting Tech Lead",
+        org: "GREat/UFC",
+        line: "Took a hackathon prototype to Dell's engineering standards, on an architecture I proposed.",
+      },
+      {
+        period: "2025 to present",
+        role: "AluMonitor",
+        org: "UFC",
+        line: "Student dropout prediction platform in production, running its first official socioeconomic data collection.",
+      },
+      {
+        period: "Sep to Oct 2025",
+        role: "Huawei MVP",
+        org: "UFC",
+        line: "Two-month prototype: protected environmental areas monitored by satellite on a 3D globe. I handled the infrastructure on Dataprev's cloud.",
+      },
+      {
+        period: "2025",
+        role: "FOGO",
+        org: "UFC Itapajé campus",
+        line: "Flight controller and digital twin for autonomous drones with Eclipse Ditto: remote control, telemetry and the first dashboards.",
+      },
+    ],
+    educationTitle: "Education",
+    education: {
+      course: "Systems Analysis and Development",
+      school: "Federal University of Ceará",
+      period: "Mar 2023 to Apr 2026",
+      honor: "Summa Cum Laude",
+    },
+    certificationsTitle: "Certifications",
+    certifications: [
+      { name: "Development Program", org: "Rocketseat", date: "Apr 2025" },
+      { name: "AWS Academy Cloud Foundations", org: "AWS", date: "2022" },
+      { name: "Fundamentals of Deep Learning", org: "NVIDIA", date: "Sep 2025" },
+    ],
+  },
+  stack: {
+    id: "stack",
+    title: "Stack",
+    items: [
+      { name: "TypeScript", icon: "typescript.svg" },
+      { name: "Python", icon: "python.svg" },
+      { name: "Ruby", icon: "ruby.svg" },
+      { name: "React", icon: "react.svg" },
+      { name: "Next.js", icon: "nextdotjs.svg" },
+      { name: "React Native", icon: "react-native.svg" },
+      { name: "Node.js", icon: "nodedotjs.svg" },
+      { name: "NestJS", icon: "nestjs.svg" },
+      { name: "Fastify", icon: "fastify.svg" },
+      { name: "FastAPI", icon: "fastapi.svg" },
+      { name: "Flask", icon: "flask.svg" },
+      { name: "Ruby on Rails", icon: "rubyonrails.svg" },
+      { name: "PostgreSQL", icon: "postgresql.svg" },
+      { name: "Docker", icon: "docker.svg" },
+      { name: "Playwright", icon: "playwright.svg" },
+      { name: "Claude Code", icon: "claude.svg" },
+    ],
+  },
+  moreProjects: {
+    id: "projetos",
+    title: "More projects",
+    items: [
+      {
+        name: "Huawei MVP",
+        line: "Two-month prototype: protected environmental areas monitored by satellite on a 3D globe. I handled the infrastructure on Dataprev's cloud.",
+      },
+      {
+        name: "FOGO",
+        line: "Flight controller and digital twin for autonomous drones with Eclipse Ditto: remote control, telemetry and the first dashboards.",
+      },
+      {
+        name: "Microservices Workshop",
+        line: "The same feature as a monolith and as microservices, with Kong, RabbitMQ and Jaeger.",
+        href: "https://github.com/Kaiser-Inc/Microservices-Workshop",
+      },
+    ],
+  },
+  kaiserinc: {
+    id: "kaiserinc",
+    title: "KaiserInc",
+    intro:
+      "KaiserInc is my product studio. I build my own SaaS products and tools with the care of a paid product: tests, documentation and a design system in every project.",
+    products: [
+      {
+        name: "ResenhARK",
+        line: "A virtual room for board games to hang out with friends: join with a code, no sign-up, with chat and games like Hitline, Huehint and Taleclue.",
+        status: "Live",
+      },
+      {
+        name: "MetriK",
+        line: "Tracks code quality across stacks (Python, Node, Ruby, Next and Expo), with side-by-side comparisons and charts.",
+        status: "Available",
+        href: "https://metri-k.vercel.app",
+      },
+      {
+        name: "Kaiser Utils",
+        line: "Boilerplates, configs and everyday development tools. My AI skills will be added here.",
+        status: "Available",
+        href: "https://github.com/Kaiser-Inc/Utils",
+      },
+      { name: "Levelify", line: "Turns habits into RPG progression.", status: "Beta soon" },
+    ],
+    cta: { label: "Meet KaiserInc", href: "https://github.com/Kaiser-Inc" },
+  },
+  services: {
+    id: "servicos",
+    title: "Services",
+    offers: [
+      {
+        title: "AI in your company's workflow.",
+        body: "I map where AI saves time in marketing, sales or operations, and build the first automation with you.",
+      },
+      { title: "Custom software.", body: "Web or mobile systems, from prototype to production." },
+    ],
+    cta: "Talk about a project",
+  },
+  contact: {
+    id: "contato",
+    title: "Contact",
+    channels: [
+      { kind: "mail", label: "Email", value: "pedrohenriquebmelo25@gmail.com", href: "mailto:pedrohenriquebmelo25@gmail.com" },
+      { kind: "github", label: "GitHub", value: "github.com/pHenrymelo", href: "https://github.com/pHenrymelo" },
+      { kind: "linkedin", label: "LinkedIn", value: "/in/phenrymelo", href: "https://www.linkedin.com/in/phenrymelo" },
+      { kind: "phone", label: "Phone", value: "(85) 99281-9850", href: "tel:+5585992819850" },
+      { kind: "location", label: "Location", value: "Itapajé, Ceará, Brazil" },
+    ],
+    form: {
+      name: "Name",
+      namePlaceholder: "Your name",
+      email: "Email",
+      emailPlaceholder: "you@company.com",
+      message: "Message",
+      messagePlaceholder: "Tell me about the role or project",
+      submit: "Send",
+      sending: "Sending…",
+      sent: "Message sent. I'll reply by email.",
+      fallback: "Prefer email? pedrohenriquebmelo25@gmail.com",
+      fallbackHref: "mailto:pedrohenriquebmelo25@gmail.com",
+      errors: {
+        invalid_name: "Enter your name.",
+        invalid_email: "Invalid email.",
+        invalid_message: "Tell me a bit more: at least 10 characters.",
+        invalid_request: "Invalid request.",
+        rate_limited: "Too many messages in a row. Try again in a minute.",
+        unavailable: "Email is unavailable right now.",
+        send_failed: "I couldn't send your message.",
+        offline: "No connection to the server.",
+      },
+    },
+  },
+  footer: { note: "Pedro Melo · Itapajé, Ceará, Brazil" },
+  notFound: {
+    title: "This page doesn't exist.",
+    body: "The link may be wrong or the page has moved.",
+    back: "Back to start",
+  },
+} as const satisfies SiteContent;

@@ -1,233 +1,101 @@
+export type SectionId =
+  | "inicio" | "destaque" | "como-trabalho" | "experiencia" | "stack"
+  | "projetos" | "kaiserinc" | "servicos" | "contato";
 
-
-export type IconName =
-  | "github"
-  | "linkedin"
-  | "mail"
-  | "map-pin"
-  | "languages"
-  | "phone"
-  | "lock"
-  | "rocket"
-  | "cloud"
-  | "brain"
-  | "graduation-cap"
-  | "smartphone"
-  | "package"
-  | "network"
-  | "bar-chart-2"
-  | "wind"
-  | "layout-template"
-  | "user"
-  | "users"
-  | "calendar"
-  | "external-link";
-
-export type RichSegment =
-  | string
-  | { text: string; strong: true }
-  | { text: string; em: true }
-  | { text: string; href: string };
-
-export type RichText = readonly RichSegment[];
-
-export interface Link {
-  readonly label: string;
-  readonly href: string;
+export interface SectionHead {
+  readonly id: SectionId;
+  readonly title: string;
+  readonly lead?: string;
 }
 
-export interface MetaItem {
+export interface LinkItem { readonly label: string; readonly href: string }
 
-  readonly icon?: IconName;
-  readonly text: string;
+export interface CaseStudy {
+  readonly title: string;
+  readonly org: string;
+  readonly period: string;
+  readonly problem: string;
+  readonly role: string;
+  readonly decisions: readonly string[];
+  readonly result: string;
+  readonly tags: readonly string[];
+  readonly link?: LinkItem;
 }
 
-export interface TerminalLine {
-  readonly kind: "command" | "output";
-  readonly text: string;
+export interface ExperienceItem {
+  readonly period: string;
+  readonly role: string;
+  readonly org: string;
+  readonly line: string;
 }
 
-export interface ContactChannel {
-  readonly icon: IconName;
-  readonly label: string;
-  readonly value: string;
-
+export interface Product {
+  readonly name: string;
+  readonly line: string;
+  readonly status: string;
   readonly href?: string;
 }
 
-export interface StackGroup {
-  readonly label: string;
-  readonly hint: string;
+export type ContactErrorCode =
+  | "invalid_name" | "invalid_email" | "invalid_message" | "invalid_request"
+  | "rate_limited" | "unavailable" | "send_failed" | "offline";
 
-  readonly items: readonly { readonly name: string; readonly brand?: true }[];
-}
+export type ChannelKind = "mail" | "github" | "linkedin" | "phone" | "location";
 
-export interface PersonalProject {
-
-  readonly mark: string;
-  readonly eyebrow: string;
-  readonly title: string;
-  readonly description: string;
-  readonly tags: readonly { readonly label: string; readonly nda?: true }[];
-
-  readonly repo?: Link;
-}
-
-export interface TimelineItem {
-  readonly date: string;
-  readonly title: string;
-  readonly org: string;
-  readonly description: string;
-  readonly tags: readonly string[];
-
-  readonly current?: true;
-}
-
-export interface Education {
-  readonly title: string;
-  readonly org: string;
-  readonly date: string;
-  readonly honors?: string;
-  readonly diplomaHref?: string;
-}
-
-export interface Certification {
-  readonly icon: IconName;
-  readonly title: string;
-  readonly org: string;
-}
-
-export interface SectionHeading {
-  readonly eyebrow: string;
-  readonly title: string;
-  readonly id: string;
-  readonly description?: string;
-}
-
-export interface PersonalContent {
-  readonly meta: {
-    readonly title: string;
-    readonly description: string;
+export interface SiteContent {
+  readonly meta: { readonly title: string; readonly description: string };
+  readonly nav: {
+    readonly links: readonly { readonly id: SectionId; readonly label: string }[];
+    readonly contactCta: string;
+    readonly langSwitch: { readonly label: string; readonly target: "pt" | "en"; readonly targetName: string };
+    readonly menuLabel: string;
   };
   readonly hero: {
-    readonly eyebrow: string;
-    readonly headlineBefore: string;
-    readonly headlineAccent: string;
-    readonly headlineAfter: string;
-    readonly subtitle: string;
-    readonly meta: readonly MetaItem[];
-    readonly avatar: { readonly src: string; readonly alt: string };
-    readonly profile: { readonly name: string; readonly handle: string };
-    readonly terminal: {
-      readonly title: string;
-      readonly lines: readonly TerminalLine[];
-    };
-    readonly primaryCta: Link;
-    readonly cvCta: Link;
+    readonly name: string;
+    readonly alias: string;
+    readonly headline: string;
+    readonly bio: string;
+    readonly avatarAlt: string;
+    readonly ctaProjects: string;
+    readonly ctaCv: string;
+    readonly cvHref: string;
   };
-  readonly about: {
-    readonly heading: SectionHeading;
-    readonly paragraphs: readonly RichText[];
-    readonly sidebar: { readonly title: string; readonly description: string; readonly cta: Link };
+  readonly featured: SectionHead & {
+    readonly cases: readonly CaseStudy[];
+    readonly labels: { readonly problem: string; readonly role: string; readonly decisions: string; readonly result: string };
   };
-  readonly stack: {
-    readonly heading: SectionHeading;
-    readonly groups: readonly StackGroup[];
+  readonly howIWork: SectionHead & { readonly steps: readonly { readonly title: string; readonly body: string }[] };
+  readonly experience: SectionHead & {
+    readonly items: readonly ExperienceItem[];
+    readonly educationTitle: string;
+    readonly education: { readonly course: string; readonly school: string; readonly period: string; readonly honor: string };
+    readonly certificationsTitle: string;
+    readonly certifications: readonly { readonly name: string; readonly org: string; readonly date: string }[];
   };
-  readonly projects: {
-    readonly heading: SectionHeading;
-    readonly items: readonly PersonalProject[];
+  readonly stack: SectionHead & { readonly items: readonly { readonly name: string; readonly icon: string }[] };
+  readonly moreProjects: SectionHead & {
+    readonly items: readonly { readonly name: string; readonly line: string; readonly href?: string }[];
   };
-  readonly experience: {
-    readonly heading: SectionHeading;
-    readonly timeline: readonly TimelineItem[];
-    readonly education: { readonly title: string; readonly items: readonly Education[] };
+  readonly kaiserinc: SectionHead & {
+    readonly intro: string;
+    readonly products: readonly Product[];
+    readonly cta: LinkItem;
   };
-  readonly certifications: {
-    readonly heading: SectionHeading;
-    readonly items: readonly Certification[];
+  readonly services: SectionHead & {
+    readonly offers: readonly { readonly title: string; readonly body: string }[];
+    readonly cta: string;
   };
-  readonly kaiserTeaser: {
-    readonly id: string;
-    readonly eyebrow: string;
-    readonly title: string;
-    readonly description: string;
-    readonly primaryCta: Link;
-    readonly secondaryCta: Link;
-  };
-  readonly contact: {
-    readonly heading: SectionHeading;
-    readonly channels: readonly ContactChannel[];
+  readonly contact: SectionHead & {
+    readonly channels: readonly { readonly kind: ChannelKind; readonly label: string; readonly value: string; readonly href?: string }[];
     readonly form: {
-      readonly hint: string;
-      readonly successMessage: string;
-      readonly fallbackHref: string;
+      readonly name: string; readonly namePlaceholder: string;
+      readonly email: string; readonly emailPlaceholder: string;
+      readonly message: string; readonly messagePlaceholder: string;
+      readonly submit: string; readonly sending: string; readonly sent: string;
+      readonly fallback: string; readonly fallbackHref: string;
+      readonly errors: Readonly<Record<ContactErrorCode, string>>;
     };
   };
-  readonly footer: {
-    readonly name: string;
-    readonly year: string;
-    readonly note: string;
-    readonly links: readonly { readonly icon: IconName; readonly href: string; readonly label: string }[];
-  };
-}
-
-export interface Stat {
-  readonly value: string;
-
-  readonly suffix?: string;
-  readonly label: string;
-}
-
-export interface Principle {
-  readonly number: string;
-  readonly title: string;
-  readonly text: string;
-}
-
-export type ProjectStatus = "live" | "dev";
-
-export interface KaiserProject {
-  readonly icon: IconName;
-  readonly status: ProjectStatus;
-  readonly statusLabel: string;
-  readonly title: string;
-  readonly description: string;
-  readonly tags: readonly string[];
-  readonly repo?: Link;
-}
-
-export interface KaiserContent {
-  readonly meta: {
-    readonly title: string;
-    readonly description: string;
-  };
-  readonly hero: {
-    readonly eyebrow: string;
-    readonly headlineBefore: string;
-    readonly headlineAccent: string;
-    readonly subtitle: string;
-    readonly meta: readonly MetaItem[];
-    readonly stats: readonly Stat[];
-  };
-  readonly about: {
-    readonly heading: SectionHeading;
-    readonly paragraphs: readonly RichText[];
-    readonly principles: { readonly title: string; readonly items: readonly Principle[] };
-  };
-  readonly projects: {
-    readonly heading: SectionHeading;
-    readonly items: readonly KaiserProject[];
-  };
-  readonly backStrip: {
-    readonly title: string;
-    readonly description: string;
-    readonly cta: Link;
-  };
-  readonly footer: {
-    readonly name: string;
-    readonly tagline: string;
-    readonly year: string;
-    readonly links: readonly Link[];
-  };
+  readonly footer: { readonly note: string };
+  readonly notFound: { readonly title: string; readonly body: string; readonly back: string };
 }
