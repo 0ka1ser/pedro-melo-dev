@@ -7,4 +7,7 @@ export const contactSchema = z.object({
   message: z.string().trim().min(10, "invalid_message").max(1500, "invalid_message"),
 });
 
+// Códigos que o schema pode devolver; qualquer outra mensagem (ex.: tipo errado do zod) vira invalid_request na rota.
+export const contactIssueCodes: readonly string[] = ["invalid_name", "invalid_email", "invalid_message"];
+
 export type ContactInput = z.infer<typeof contactSchema>;

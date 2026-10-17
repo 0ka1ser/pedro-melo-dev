@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { contactSchema } from "@/lib/contact-schema";
+import { contactIssueCodes, contactSchema } from "@/lib/contact-schema";
 
 const TO = process.env.CONTACT_TO_EMAIL ?? "pedrohenriquebmelo25@gmail.com";
 
@@ -46,8 +46,9 @@ export async function POST(request: Request) {
 
   const parsed = contactSchema.safeParse(payload);
   if (!parsed.success) {
+    const code = parsed.error.issues[0]?.message ?? "";
     return Response.json(
-      { error: parsed.error.issues[0]?.message ?? "invalid_request" },
+      { error: contactIssueCodes.includes(code) ? code : "invalid_request" },
       { status: 400 },
     );
   }

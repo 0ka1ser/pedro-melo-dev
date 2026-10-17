@@ -145,6 +145,14 @@ test.describe("rota /api/contact", () => {
     expect((await r.json()).error).toBe("invalid_name");
   });
 
+  test("payload malformado devolve código, não texto do zod", async ({ request }) => {
+    for (const data of [{}, { name: 1, email: "a@b.co", message: "mensagem longa o bastante" }, []]) {
+      const r = await request.post("/api/contact", { data, headers: { "x-forwarded-for": ipDeTeste() } });
+      expect(r.status()).toBe(400);
+      expect((await r.json()).error, JSON.stringify(data)).toBe("invalid_request");
+    }
+  });
+
   test("rejeita método não suportado", async ({ request }) => {
     const r = await request.get("/api/contact", {
       headers: { "x-forwarded-for": ipDeTeste() },

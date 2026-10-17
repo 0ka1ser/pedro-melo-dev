@@ -55,4 +55,14 @@ test.describe("idioma", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText("não existe");
     await expect(page.getByText("This page doesn't exist.")).toBeVisible();
   });
+
+  test("sitemap lista só rotas que existem, nos dois idiomas", async ({ request }) => {
+    const xml = await (await request.get("/sitemap.xml")).text();
+    const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+    expect(urls).toEqual(expect.arrayContaining(["/pt", "/en"]));
+    for (const path of urls) {
+      const r = await request.get(path, { maxRedirects: 0 });
+      expect(r.status(), `${path} responde 200 sem redirect`).toBe(200);
+    }
+  });
 });
