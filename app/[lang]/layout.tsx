@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
+import { Cursor } from "@/components/site/Cursor";
 import { Footer } from "@/components/site/Footer";
 import { Nav } from "@/components/site/Nav";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -53,6 +54,7 @@ export default async function RootLayout({
           <Nav content={c.nav} brand={c.hero.name} />
           {children}
           <Footer note={c.footer.note} />
+          <Cursor />
         </ThemeProvider>
       </body>
     </html>

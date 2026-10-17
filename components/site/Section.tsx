@@ -1,6 +1,9 @@
 import type { SectionHead } from "@/content/types";
 import { cn } from "@/lib/utils";
 
+export const focusRing = "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2";
+export const textLink = `text-primary-text underline-offset-4 hover:underline ${focusRing}`;
+
 export function Section({
   head,
   className,
