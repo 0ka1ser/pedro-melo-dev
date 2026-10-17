@@ -67,7 +67,8 @@ function Button({
           data-slot="button-spinner"
           className="absolute inset-0 flex items-center justify-center animate-in fade-in-0 zoom-in-75 duration-150 ease-out"
         >
-          <Spinner />
+          {/* KaiserInc: o rótulo "Carregando" do Spinner é fixo em português; o texto do botão e aria-busy já informam o estado. */}
+          <Spinner aria-hidden="true" role="presentation" aria-label={undefined} />
         </span>
       )}
       <span data-slot="button-label" className={cn("inline-flex items-center gap-[inherit]", loading && "text-transparent")}>

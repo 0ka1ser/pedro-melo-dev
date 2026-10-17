@@ -32,7 +32,7 @@ function clientIp(request: Request) {
 export async function POST(request: Request) {
   if (isRateLimited(clientIp(request))) {
     return Response.json(
-      { error: "Muitas mensagens seguidas. Tente novamente em um minuto." },
+      { error: "rate_limited" },
       { status: 429 },
     );
   }
@@ -41,13 +41,13 @@ export async function POST(request: Request) {
   try {
     payload = await request.json();
   } catch {
-    return Response.json({ error: "Requisição inválida." }, { status: 400 });
+    return Response.json({ error: "invalid_request" }, { status: 400 });
   }
 
   const parsed = contactSchema.safeParse(payload);
   if (!parsed.success) {
     return Response.json(
-      { error: parsed.error.issues[0]?.message ?? "Dados inválidos." },
+      { error: parsed.error.issues[0]?.message ?? "invalid_request" },
       { status: 400 },
     );
   }
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
     console.error("RESEND_API_KEY não configurada: mensagem não enviada.");
     return Response.json(
-      { error: "Canal de email indisponível no momento." },
+      { error: "unavailable" },
       { status: 503 },
     );
   }
@@ -75,12 +75,12 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Resend recusou o envio:", error);
-      return Response.json({ error: "Não foi possível enviar sua mensagem." }, { status: 502 });
+      return Response.json({ error: "send_failed" }, { status: 502 });
     }
 
     return Response.json({ ok: true });
   } catch (cause) {
     console.error("Falha ao enviar email:", cause);
-    return Response.json({ error: "Não foi possível enviar sua mensagem." }, { status: 502 });
+    return Response.json({ error: "send_failed" }, { status: 502 });
   }
 }

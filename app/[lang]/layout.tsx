@@ -5,6 +5,7 @@ import { Cursor } from "@/components/site/Cursor";
 import { Footer } from "@/components/site/Footer";
 import { Nav } from "@/components/site/Nav";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { getContent } from "@/content";
 import { hasLocale, locales } from "@/lib/i18n";
 import { siteUrl } from "@/lib/site";
@@ -55,6 +56,7 @@ export default async function RootLayout({
           {children}
           <Footer note={c.footer.note} />
           <Cursor />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

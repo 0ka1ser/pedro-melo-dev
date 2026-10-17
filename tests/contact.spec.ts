@@ -12,11 +12,11 @@ async function preencher(page: Page, dados = VALIDA) {
   await page.fill('textarea[name="message"]', dados.message);
 }
 
-const status = (page: Page) => page.locator("form p[aria-live]");
+const status = (page: Page) => page.locator('form [role="status"]');
 
 test.describe("formulário de contato", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/#contato");
+    await page.goto("/pt#contato");
   });
 
   test("bloqueia envio inválido sem chamar a API", async ({ page }) => {
@@ -29,6 +29,7 @@ test.describe("formulário de contato", () => {
     await page.click('button[type="submit"]');
 
     await expect(status(page)).toContainText("Informe seu nome");
+    await expect(page.locator('input[name="name"]')).toHaveAttribute("aria-invalid", "true");
     expect(chamou).toBe(false);
   });
 
@@ -49,7 +50,7 @@ test.describe("formulário de contato", () => {
       r.fulfill({
         status: 502,
         contentType: "application/json",
-        body: '{"error":"Não consegui enviar sua mensagem."}',
+        body: '{"error":"send_failed"}',
       }),
     );
 
@@ -84,6 +85,52 @@ test.describe("formulário de contato", () => {
   });
 });
 
+test.describe("erros traduzidos pelo idioma da página", () => {
+  test("durante o envio em /en nada anuncia texto em português", async ({ page }) => {
+    await page.goto("/en#contato");
+    await page.route("**/api/contact", async (r) => {
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      await r.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' });
+    });
+    await preencher(page);
+    await page.click('button[type="submit"]');
+    await expect(page.locator('button[type="submit"]')).toContainText("Sending");
+    // contagem pontual: toHaveCount(0) esperaria o spinner sumir e passaria sem provar nada
+    const anunciados = await page.locator('form [aria-label="Carregando"]:not([aria-hidden="true"])').count();
+    expect(anunciados).toBe(0);
+  });
+
+  test("erro aparece no idioma da página", async ({ page }) => {
+    await page.goto("/en#contato");
+    await page.route("**/api/contact", (r) =>
+      r.fulfill({ status: 502, contentType: "application/json", body: '{"error":"send_failed"}' }),
+    );
+    await preencher(page);
+    await page.click('button[type="submit"]');
+    await expect(status(page)).toContainText("I couldn't send");
+  });
+
+  test("503 do servidor sem chave aparece no idioma da página", async ({ page }) => {
+    await page.goto("/en#contato");
+    await page.route("**/api/contact", (r) =>
+      r.fulfill({ status: 503, contentType: "application/json", body: '{"error":"unavailable"}' }),
+    );
+    await preencher(page);
+    await page.click('button[type="submit"]');
+    await expect(status(page)).toContainText("Email is unavailable");
+  });
+
+  test("código desconhecido da API cai na mensagem genérica", async ({ page }) => {
+    await page.goto("/pt#contato");
+    await page.route("**/api/contact", (r) =>
+      r.fulfill({ status: 500, contentType: "application/json", body: '{"error":"???"}' }),
+    );
+    await preencher(page);
+    await page.click('button[type="submit"]');
+    await expect(status(page)).toContainText("Não consegui enviar");
+  });
+});
+
 function ipDeTeste() {
   return `203.0.113.${Math.floor(Math.random() * 250) + 1}`;
 }
@@ -95,6 +142,7 @@ test.describe("rota /api/contact", () => {
       headers: { "x-forwarded-for": ipDeTeste() },
     });
     expect(r.status()).toBe(400);
+    expect((await r.json()).error).toBe("invalid_name");
   });
 
   test("rejeita método não suportado", async ({ request }) => {
@@ -112,6 +160,6 @@ test.describe("rota /api/contact", () => {
       headers: { "x-forwarded-for": ipDeTeste() },
     });
     expect(r.status()).toBe(503);
-    expect((await r.json()).ok).toBeUndefined();
+    expect((await r.json()).error).toBe("unavailable");
   });
 });

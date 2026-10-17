@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Contact } from "@/components/sections/Contact";
 import { Experience } from "@/components/sections/Experience";
 import { Featured } from "@/components/sections/Featured";
 import { Hero } from "@/components/sections/Hero";
@@ -7,7 +8,6 @@ import { KaiserInc } from "@/components/sections/KaiserInc";
 import { MoreProjects } from "@/components/sections/MoreProjects";
 import { Services } from "@/components/sections/Services";
 import { Stack } from "@/components/sections/Stack";
-import { Section } from "@/components/site/Section";
 import { getContent } from "@/content";
 import { hasLocale } from "@/lib/i18n";
 
@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <MoreProjects content={c.moreProjects} />
       <KaiserInc content={c.kaiserinc} />
       <Services content={c.services} />
-      <Section head={c.contact} />
+      <Contact content={c.contact} />
     </main>
   );
 }
