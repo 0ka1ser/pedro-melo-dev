@@ -5,7 +5,8 @@ vitrine para quem visita o portfólio, não documentação de projeto.
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Resend · Zod · Playwright
+Next.js 16 (App Router, `proxy.ts`) · React 19 · TypeScript · Tailwind CSS v4 · KaiserInc Base
+(registry `@kaiserinc`) · Resend · Zod · Playwright
 
 ## Rodando localmente
 
@@ -14,65 +15,59 @@ npm install
 npm run dev
 ```
 
-Abre em <http://localhost:3000>.
+Abre em <http://localhost:3000>, que redireciona para `/pt` ou `/en`.
 
 ```bash
-npm run build   # build de produção
-npm run lint    # eslint
-npm test        # Playwright (desktop + mobile), sobe o servidor sozinho
+npm run build       # build de produção
+npm run lint        # eslint
+npx tsc --noEmit    # tipos e conteúdo
+npm test            # Playwright (desktop + mobile), sobe o servidor sozinho na porta 3000
 ```
 
 Os testes precisam do navegador baixado uma vez: `npx playwright install chromium`.
 
 ### Variáveis de ambiente
 
-Copie `.env.example` para `.env.local`. Só `RESEND_API_KEY` é obrigatória, e apenas para o
-formulário de contato funcionar. Sem ela a rota responde 503 em vez de fingir que enviou.
+Só `RESEND_API_KEY` é necessária, e apenas para o formulário de contato enviar email. Defina em
+`.env.local`. Sem ela a rota `/api/contact` responde 503 em vez de fingir que enviou.
+`NEXT_PUBLIC_SITE_URL` define o domínio nos metadados e no sitemap quando houver domínio próprio.
 
 ## Estrutura
 
 ```
-app/            rotas, layout, estilos, rota do formulário
+app/
+  [lang]/         layout, página e 404 por idioma (pt, en)
+  api/contact/    rota do formulário
+proxy.ts          redireciona / para /pt ou /en pelo Accept-Language
+content/          todo o texto do site, tipado, em português e inglês
 components/
-  layout/       nav e rodapé (variam por rota)
-  ui/           primitivos compartilhados pelas duas páginas
-  personal/     seções de /
-  kaiser/       seções de /kaiserinc
-content/        todo o conteúdo do site, tipado
-hooks/          scroll-spy da navegação
-lib/            utilitários e schema do formulário
-tests/          Playwright
+  ui/             itens da registry @kaiserinc
+  sections/       as 9 seções
+  site/           nav, rodapé, seletor de idioma, efeitos
+lib/              i18n, schema do formulário, url do site
+tests/            Playwright
 ```
 
 ## Como ajustar o conteúdo
 
-Textos, projetos, experiências, stack e canais de contato vivem em `content/`:
-
 | Arquivo | O que controla |
 | --- | --- |
-| `content/personal.ts` | tudo da página `/` |
-| `content/kaiserinc.ts` | tudo da página `/kaiserinc` |
-| `content/types.ts` | o formato desses dados |
+| `content/types.ts` | o formato do conteúdo (`SiteContent`) |
+| `content/pt.ts` | todo o texto em português |
+| `content/en.ts` | todo o texto em inglês |
 
-Nenhum componente carrega texto fixo. Adicionar um projeto é adicionar um objeto na lista; com o
-TypeScript em `strict`, esquecer um campo quebra o build em vez de sumir da página silenciosamente.
+Os textos vêm do texto-base de Pedro Melo, no vault Ness-Brain. Um fato novo entra primeiro no
+texto-base, depois em `pt.ts` e por fim em `en.ts`. Os dois arquivos satisfazem o mesmo tipo: uma
+chave faltando em um idioma quebra o `tsc` e o build. Nenhum componente carrega texto fixo.
 
-Cores, tipografia, espaçamento e sombras vivem em `app/tokens.css`, a fonte de verdade do design.
-Mudar uma cor ali repinta o site inteiro. O arquivo já traz um tema claro completo em
-`[data-theme="light"]`: para ligar um alternador depois, basta trocar esse atributo no `<html>`
-(definido em `app/layout.tsx`).
+Cores, raios e tamanhos de controle vêm dos tokens do KaiserInc Base em `app/globals.css`. Componente
+não usa cor fixa, só os tokens (`bg-background`, `text-primary-text`, `border-border`...).
 
-`app/globals.css` faz a ponte desses tokens para os utilitários do Tailwind e é onde mora a
-tipografia base.
-
-Currículo: coloque o PDF em `public/cv-pedro-melo.pdf`. O botão "Download CV" aparece sozinho
-quando o arquivo existe e some quando não existe, para não deixar link quebrado.
-
-Diploma: coloque a imagem em `public/diploma-pedro-melo.jpg`. O link "Ver diploma" no card de
-formação segue a mesma regra: só aparece quando o arquivo existe.
+Currículo: `public/cv-pedro-melo-pt.pdf`. O CV em inglês ainda não existe; `content/en.ts` aponta
+para o PDF em português até lá.
 
 ## Deploy
 
-Vercel, sem configuração extra. O framework é detectado sozinho. Cadastre `RESEND_API_KEY` (e
-`NEXT_PUBLIC_SITE_URL`, se houver domínio próprio) nas variáveis de ambiente do projeto. Cada push
-vira deploy; PRs ganham preview.
+Vercel, pela integração Git. Cadastre `RESEND_API_KEY` (e `NEXT_PUBLIC_SITE_URL`, se houver domínio
+próprio) nas variáveis de ambiente do projeto. Cada push vira deploy; PRs ganham preview. O
+`.vercelignore` deixa de fora `.dev-flow/`, `.env*` e os testes.
