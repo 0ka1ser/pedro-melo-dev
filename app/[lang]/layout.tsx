@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
+import { Footer } from "@/components/site/Footer";
+import { Nav } from "@/components/site/Nav";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getContent } from "@/content";
 import { hasLocale, locales } from "@/lib/i18n";
@@ -38,6 +40,7 @@ export default async function RootLayout({
 }) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
+  const c = getContent(lang);
   return (
     <html
       lang={lang === "en" ? "en" : "pt-BR"}
@@ -46,7 +49,11 @@ export default async function RootLayout({
       className={cn("antialiased font-sans", geist.variable, geistMono.variable)}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Nav content={c.nav} brand={c.hero.name} />
+          {children}
+          <Footer note={c.footer.note} />
+        </ThemeProvider>
       </body>
     </html>
   );

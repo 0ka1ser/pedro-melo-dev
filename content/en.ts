@@ -19,6 +19,7 @@ export const en = {
     contactCta: "Contact",
     langSwitch: { label: "Ler em português", target: "pt", targetName: "Português" },
     menuLabel: "Menu",
+    closeLabel: "Close",
   },
   hero: {
     name: "Pedro Melo",

@@ -19,6 +19,7 @@ export const pt = {
     contactCta: "Contato",
     langSwitch: { label: "Read in English", target: "en", targetName: "English" },
     menuLabel: "Menu",
+    closeLabel: "Fechar",
   },
   hero: {
     name: "Pedro Melo",

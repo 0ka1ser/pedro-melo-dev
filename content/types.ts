@@ -49,6 +49,7 @@ export interface SiteContent {
     readonly contactCta: string;
     readonly langSwitch: { readonly label: string; readonly target: "pt" | "en"; readonly targetName: string };
     readonly menuLabel: string;
+    readonly closeLabel: string;
   };
   readonly hero: {
     readonly name: string;
