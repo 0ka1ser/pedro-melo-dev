@@ -25,7 +25,7 @@ export const en = {
   },
   hero: {
     name: "Pedro Melo",
-    alias: "Kaiser",
+    alias: "0Ka1ser",
     headline: "Software Engineer · Tech Lead on an R&D project with Dell at GREat/UFC",
     bio: "I'm a software engineer at GREat (UFC, Brazil), where I act as Tech Lead on an R&D project with Dell. I design the architecture, set the team's priorities and turn prototypes into systems the company can maintain. Outside of that, I ship products through KaiserInc.",
     avatarAlt: "Photo of Pedro Melo",

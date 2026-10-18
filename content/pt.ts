@@ -25,7 +25,7 @@ export const pt = {
   },
   hero: {
     name: "Pedro Melo",
-    alias: "Kaiser",
+    alias: "0Ka1ser",
     headline: "Engenheiro de Software · Tech Lead em P&D com a Dell no GREat/UFC",
     bio: "Sou engenheiro de software no GREat (UFC), onde atuo como Tech Lead num projeto de P&D com a Dell. Desenho a arquitetura, priorizo o time e transformo protótipos em sistemas que a empresa consegue manter. Fora dali, lanço produtos pela KaiserInc.",
     avatarAlt: "Foto de Pedro Melo",

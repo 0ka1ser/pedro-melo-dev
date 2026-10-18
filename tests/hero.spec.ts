@@ -45,60 +45,108 @@ test("CV do idioma está disponível", async ({ request }) => {
 const hidratado = (page: import("@playwright/test").Page) =>
   page.waitForFunction(() => document.querySelector<HTMLElement>("[data-avatar-canvas]")?.dataset.ready === "true");
 
-test.describe("troca de nome", () => {
-  const visual = '#inicio-title [data-name-visual]';
+test.describe("nome desenhado (StrokeText)", () => {
+  const titulo = "#inicio-title";
+  const swap = `${titulo} [data-name-swap]`;
 
-  async function trocar(page: import("@playwright/test").Page, isMobile: boolean) {
-    const alvo = page.locator("#inicio-title [data-name-swap]");
-    if (isMobile) await alvo.tap();
-    else await alvo.hover();
-  }
+  // Texto que está sendo desenhado, lido da camada de preenchimento do SVG.
+  const desenhado = (page: import("@playwright/test").Page) =>
+    page.locator(`${titulo} [data-fill-char]`).evaluateAll((els) => els.map((el) => el.textContent).join(""));
+  // Maior deslocamento de traço entre os caracteres: > 0 enquanto o contorno ainda está sendo desenhado.
+  const traco = (page: import("@playwright/test").Page) =>
+    page.locator(`${titulo} [data-stroke-char]`).evaluateAll((els) => Math.max(0, ...els.map((el) => parseFloat(getComputedStyle(el).strokeDashoffset) || 0)));
+  const preenchido = (page: import("@playwright/test").Page) =>
+    page.locator(`${titulo} clipPath rect`).first().evaluate((el) => Number(el.getAttribute("width")));
+  const completo = async (page: import("@playwright/test").Page) => (await traco(page)) === 0 && (await preenchido(page)) > 50;
 
-  async function sair(page: import("@playwright/test").Page, isMobile: boolean) {
-    if (isMobile) await page.locator("#inicio-title [data-name-swap]").tap();
-    else await page.mouse.move(2, 600);
-  }
-
-  test("vira Kaiser, volta para Pedro Melo e mantém o nome real acessível", async ({ page, isMobile }) => {
-    await page.goto("/pt");
-    await hidratado(page);
-    await expect(page.locator(visual)).toHaveText("Pedro Melo");
-    await trocar(page, isMobile);
-    await expect(page.locator(visual)).toHaveText("Kaiser", { timeout: 4000 });
-    await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName(/Pedro Melo/);
-    await sair(page, isMobile);
-    await expect(page.locator(visual)).toHaveText("Pedro Melo", { timeout: 4000 });
-  });
-
-  test("passa por caracteres embaralhados no caminho", async ({ page, isMobile }) => {
-    await page.goto("/pt");
-    await hidratado(page);
-    const amostras = page.evaluate(
-      (selector) =>
-        new Promise<string[]>((resolve) => {
-          const el = document.querySelector(selector)!;
-          const seen = new Set<string>();
+  // Amostra, quadro a quadro, o traço e a largura do preenchimento durante `ms`.
+  const amostrar = (page: import("@playwright/test").Page, ms: number) =>
+    page.evaluate(
+      ({ selector, ms }) =>
+        new Promise<{ traco: number; preenchido: number; texto: string }[]>((resolve) => {
+          const out: { traco: number; preenchido: number; texto: string }[] = [];
           const start = performance.now();
           const tick = () => {
-            seen.add(el.textContent ?? "");
-            if (performance.now() - start < 1500) requestAnimationFrame(tick);
-            else resolve([...seen]);
+            const strokes = [...document.querySelectorAll(`${selector} [data-stroke-char]`)] as SVGElement[];
+            const rect = document.querySelector(`${selector} clipPath rect`);
+            out.push({
+              traco: Math.max(0, ...strokes.map((el) => parseFloat(getComputedStyle(el).strokeDashoffset) || 0)),
+              preenchido: Number(rect?.getAttribute("width") ?? 0),
+              texto: [...document.querySelectorAll(`${selector} [data-fill-char]`)].map((el) => el.textContent).join(""),
+            });
+            if (performance.now() - start < ms) requestAnimationFrame(tick);
+            else resolve(out);
           };
           tick();
         }),
-      visual,
+      { selector: titulo, ms },
     );
-    await trocar(page, isMobile);
-    const vistos = await amostras;
-    expect(vistos.filter((texto) => texto !== "Pedro Melo" && texto !== "Kaiser").length).toBeGreaterThan(2);
+
+  test("no carregamento o contorno é desenhado e depois o preenchimento entra", async ({ page }) => {
+    await page.goto("/pt");
+    const quadros = await amostrar(page, 4000);
+    expect(Math.max(...quadros.map((q) => q.traco))).toBeGreaterThan(50); // contorno ainda sendo traçado
+    const depois = quadros.slice(-5);
+    expect(depois.every((q) => q.traco === 0)).toBe(true);
+    const larguras = quadros.map((q) => q.preenchido);
+    expect(Math.max(...larguras)).toBeGreaterThan(50);
+    expect(new Set(larguras).size).toBeGreaterThan(5); // o preenchimento varre, não aparece de uma vez
+    expect(depois[0].texto).toBe("Pedro Melo");
   });
 
-  test("com movimento reduzido a troca continua, mais curta", async ({ page, isMobile }) => {
+  test("o hover é um gatilho: entrar troca Pedro Melo por 0Ka1ser, entrar de novo troca de volta, sair não desfaz", async ({ page, isMobile }) => {
+    test.skip(isMobile, "hover só com mouse");
+    await page.goto("/pt");
+    await hidratado(page);
+    await expect.poll(() => completo(page), { timeout: 6000 }).toBe(true);
+    const sobre = amostrar(page, 3000);
+    await page.locator(swap).hover();
+    const quadros = await sobre;
+    expect(quadros.some((q) => q.texto === "0Ka1ser")).toBe(true);
+    expect(Math.max(...quadros.filter((q) => q.texto === "0Ka1ser").map((q) => q.traco))).toBeGreaterThan(50); // redesenhou
+    await expect.poll(() => completo(page), { timeout: 6000 }).toBe(true);
+    expect(await desenhado(page)).toBe("0Ka1ser");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName(/Pedro Melo/);
+    // sair não desfaz
+    await page.mouse.move(2, 600);
+    await page.waitForTimeout(1500);
+    expect(await desenhado(page)).toBe("0Ka1ser");
+    // entrar de novo troca de volta
+    await page.locator(swap).hover();
+    await expect.poll(() => desenhado(page), { timeout: 4000 }).toBe("Pedro Melo");
+    await expect.poll(() => completo(page), { timeout: 6000 }).toBe(true);
+    await page.mouse.move(2, 600);
+    await page.waitForTimeout(1200);
+    expect(await desenhado(page)).toBe("Pedro Melo");
+  });
+
+  test("no toque, tocar alterna entre Pedro Melo e 0Ka1ser", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "toque só no mobile");
+    await page.goto("/pt");
+    await hidratado(page);
+    await expect.poll(() => completo(page), { timeout: 6000 }).toBe(true);
+    await page.locator(swap).tap();
+    await expect.poll(() => desenhado(page), { timeout: 4000 }).toBe("0Ka1ser");
+    await page.locator(swap).tap();
+    await expect.poll(() => desenhado(page), { timeout: 4000 }).toBe("Pedro Melo");
+  });
+
+  test("com movimento reduzido o desenho continua, mais curto", async ({ page, isMobile }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/pt");
     await hidratado(page);
-    await trocar(page, isMobile);
-    await expect(page.locator(visual)).toHaveText("Kaiser", { timeout: 1000 });
+    await expect.poll(() => completo(page), { timeout: 2000 }).toBe(true);
+    if (isMobile) await page.locator(swap).tap();
+    else await page.locator(swap).hover();
+    await expect.poll(() => desenhado(page), { timeout: 2000 }).toBe("0Ka1ser");
+    await expect.poll(() => completo(page), { timeout: 2000 }).toBe(true);
+  });
+
+  test("o nome real continua sendo o texto acessível, em /pt e /en", async ({ page }) => {
+    for (const lang of ["pt", "en"]) {
+      await page.goto(`/${lang}`);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName(/Pedro Melo/);
+    }
   });
 });
 

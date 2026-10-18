@@ -242,3 +242,24 @@ html[data-custom-cursor="on"] * {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
+
+/* StrokeText (components/ui/stroke-text.tsx): em @layer components para as utilities do Tailwind sobrescreverem. */
+@layer components {
+  .stroke-text {
+    display: block;
+    width: 100%;
+    line-height: 0;
+  }
+  .stroke-text__svg {
+    display: block;
+    width: 100%;
+    max-width: var(--stroke-text-width, 600px);
+    height: auto;
+    margin: 0 auto;
+    overflow: visible;
+  }
+  .stroke-text__stroke,
+  .stroke-text__fill {
+    user-select: none;
+  }
+}
