@@ -20,6 +20,8 @@ export const pt = {
     langSwitch: { label: "Read in English", target: "en", targetName: "English" },
     menuLabel: "Menu",
     closeLabel: "Fechar",
+    themeLabel: "Alternar tema",
+    sectionsLabel: "Seções",
   },
   hero: {
     name: "Pedro Melo",
@@ -28,7 +30,8 @@ export const pt = {
     bio: "Sou engenheiro de software no GREat (UFC), onde atuo como Tech Lead num projeto de P&D com a Dell. Desenho a arquitetura, priorizo o time e transformo protótipos em sistemas que a empresa consegue manter. Fora dali, lanço produtos pela KaiserInc.",
     avatarAlt: "Foto de Pedro Melo",
     ctaProjects: "Ver projetos",
-    ctaCv: "Baixar CV",
+    ctaCv: "Baixar currículo",
+    ctaCvError: "Não consegui baixar o currículo. Tente de novo.",
     cvHref: "/cv-pedro-melo-pt.pdf",
   },
   featured: {

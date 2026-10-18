@@ -20,6 +20,8 @@ export const en = {
     langSwitch: { label: "Ler em português", target: "pt", targetName: "Português" },
     menuLabel: "Menu",
     closeLabel: "Close",
+    themeLabel: "Toggle theme",
+    sectionsLabel: "Sections",
   },
   hero: {
     name: "Pedro Melo",
@@ -28,7 +30,8 @@ export const en = {
     bio: "I'm a software engineer at GREat (UFC, Brazil), where I act as Tech Lead on an R&D project with Dell. I design the architecture, set the team's priorities and turn prototypes into systems the company can maintain. Outside of that, I ship products through KaiserInc.",
     avatarAlt: "Photo of Pedro Melo",
     ctaProjects: "View projects",
-    ctaCv: "Download CV",
+    ctaCv: "Download résumé",
+    ctaCvError: "I couldn't download the résumé. Try again.",
     // ponytail: o CV em inglês ainda não existe; aponta para o PDF em português até lá.
     cvHref: "/cv-pedro-melo-pt.pdf",
   },

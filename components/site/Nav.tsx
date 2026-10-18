@@ -1,8 +1,8 @@
-import { buttonVariants } from "@/components/ui/button";
+import { FlowButton } from "@/components/ui/flow-button";
 import type { SiteContent } from "@/content/types";
-import { cn } from "@/lib/utils";
 import { LangSwitch } from "./LangSwitch";
 import { MobileMenu } from "./MobileMenu";
+import { ThemeToggle } from "./ThemeToggle";
 
 const focus = "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2";
 
@@ -26,9 +26,10 @@ export function Nav({ content, brand }: { content: SiteContent["nav"]; brand: st
         </nav>
         <div className="flex items-center gap-3">
           <LangSwitch target={content.langSwitch.target} label={content.langSwitch.label} />
-          <a href="#contato" className={cn(buttonVariants({ size: "sm" }), "max-md:hidden", focus)}>
+          <ThemeToggle label={content.themeLabel} />
+          <FlowButton href="#contato" className="max-md:hidden">
             {content.contactCta}
-          </a>
+          </FlowButton>
           <MobileMenu content={content} />
         </div>
       </div>

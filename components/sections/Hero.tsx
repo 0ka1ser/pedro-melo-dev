@@ -1,4 +1,6 @@
-import { buttonVariants } from "@/components/ui/button";
+import { FlowButton } from "@/components/ui/flow-button";
+import { DownloadButton } from "@/components/site/DownloadButton";
+import { Frame } from "@/components/site/Section";
 import { AvatarSwap } from "@/components/site/AvatarSwap";
 import { NameSwap } from "@/components/site/NameSwap";
 import type { SiteContent } from "@/content/types";
@@ -8,7 +10,7 @@ const avatars = ["/avatar/original.webp", "/avatar/personagem.webp"] as const;
 
 export function Hero({ content }: { content: SiteContent["hero"] }) {
   return (
-    <section id="inicio" aria-labelledby="inicio-title" className="mx-auto w-full max-w-5xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
+    <Frame id="inicio" labelledBy="inicio-title" className="py-16 sm:py-24">
       <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-10 md:grid-cols-[minmax(0,1fr)_auto]">
         <div>
           <h1 id="inicio-title" className="text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -17,16 +19,16 @@ export function Hero({ content }: { content: SiteContent["hero"] }) {
           <p className="mt-4 text-lg">{content.headline}</p>
           <p className="mt-4 max-w-prose text-muted-foreground">{content.bio}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#destaque" className={buttonVariants()}>
+            <FlowButton href="#destaque" size="lg">
               {content.ctaProjects}
-            </a>
-            <a href={content.cvHref} download className={buttonVariants({ variant: "outline" })}>
+            </FlowButton>
+            <DownloadButton href={content.cvHref} errorMessage={content.ctaCvError}>
               {content.ctaCv}
-            </a>
+            </DownloadButton>
           </div>
         </div>
         <AvatarSwap images={avatars} alt={content.avatarAlt} />
       </div>
-    </section>
+    </Frame>
   );
 }

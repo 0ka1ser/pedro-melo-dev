@@ -50,6 +50,8 @@ export interface SiteContent {
     readonly langSwitch: { readonly label: string; readonly target: "pt" | "en"; readonly targetName: string };
     readonly menuLabel: string;
     readonly closeLabel: string;
+    readonly themeLabel: string;
+    readonly sectionsLabel: string;
   };
   readonly hero: {
     readonly name: string;
@@ -59,6 +61,7 @@ export interface SiteContent {
     readonly avatarAlt: string;
     readonly ctaProjects: string;
     readonly ctaCv: string;
+    readonly ctaCvError: string;
     readonly cvHref: string;
   };
   readonly featured: SectionHead & {

@@ -63,6 +63,9 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Scrollbar fina como no ResenhARK: trilho transparente e polegar nos tokens, nos dois temas. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
   }
   html {
     scroll-padding-top: 80px;
@@ -214,4 +217,28 @@
 /* Cursor em matriz de pontos (components/site/Cursor.tsx): esconde o cursor nativo só enquanto ele está ligado. */
 html[data-custom-cursor="on"] * {
   cursor: none !important;
+}
+
+/* Troca de tema (components/site/ThemeToggle.tsx): a animação da varredura é feita por JS no pseudo-elemento. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Safari e navegadores sem scrollbar-width/scrollbar-color. Onde as propriedades padrão valem (Chromium
+   121+, Firefox), elas têm prioridade e o hover do polegar não se aplica. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }
