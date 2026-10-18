@@ -3,6 +3,9 @@ import { AvatarSwap } from "@/components/site/AvatarSwap";
 import { NameSwap } from "@/components/site/NameSwap";
 import type { SiteContent } from "@/content/types";
 
+// Repouso: foto de estúdio do Pedro. Hover (ou toque): o desenho, como easter egg (ver AvatarSwap).
+const avatars = ["/avatar/original.webp", "/avatar/personagem.webp"] as const;
+
 export function Hero({ content }: { content: SiteContent["hero"] }) {
   return (
     <section id="inicio" aria-labelledby="inicio-title" className="mx-auto w-full max-w-5xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
@@ -22,7 +25,7 @@ export function Hero({ content }: { content: SiteContent["hero"] }) {
             </a>
           </div>
         </div>
-        <AvatarSwap src="/avatar.jpg" alt={content.avatarAlt} />
+        <AvatarSwap images={avatars} alt={content.avatarAlt} />
       </div>
     </section>
   );

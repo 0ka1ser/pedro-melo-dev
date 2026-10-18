@@ -210,3 +210,8 @@
     display: none;
   }
 }
+
+/* Cursor em matriz de pontos (components/site/Cursor.tsx): esconde o cursor nativo só enquanto ele está ligado. */
+html[data-custom-cursor="on"] * {
+  cursor: none !important;
+}

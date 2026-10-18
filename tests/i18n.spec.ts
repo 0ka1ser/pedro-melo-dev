@@ -23,7 +23,7 @@ test.describe("idioma", () => {
   });
 
   test("arquivos e API não passam pelo redirect", async ({ request }) => {
-    for (const path of ["/avatar.jpg", "/favicon.ico"]) {
+    for (const path of ["/avatar/personagem.webp", "/favicon.ico"]) {
       const r = await request.get(path, { maxRedirects: 0 });
       expect(r.status(), path).not.toBe(307);
     }
